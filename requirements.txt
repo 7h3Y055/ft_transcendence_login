@@ -1,3 +1,4 @@
 django
 django-oauth-toolkit
 psycopg
+django-rest-framework
