@@ -11,23 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
-
-
-
-
-DEFAULT_PROFILE_IMAGE = 'https://media.tenor.com/zXRUDvNn0hIAAAAM/been-through-war.gif'
-DOMAIN = 'http://localhost:8000'
-
-# Google OAuth configuration
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '499739725290-got362gnd4n9n7t6ook75kdve4stabu5.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
-
-
-# 42 OAuth configuration
-SOCIAL_AUTH_42_OAUTH2_KEY = 'u-s4t2ud-781bcdee833b67dcbf0e446f5aa49447e19d1d252fdbb50fe06b618d4da10198'
-SOCIAL_AUTH_42_OAUTH2_SECRET = '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'
-
+import os
 
 # Session settings
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
@@ -54,6 +38,21 @@ OAUTH2_PROVIDER = {
     'SCOPES': {'read': 'Read scope'},
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'pong.log',
+        },
+    },
+    'root': {
+        'handlers': ['file'],
+        'level': 'DEBUG',
+    },
+}
 
 
 
@@ -107,11 +106,11 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pong',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': os.environ.get('NAME'),
+        'USER': os.environ.get('USER'),
+        'PASSWORD': os.environ.get('PASSWORD'),
+        'HOST': os.environ.get('HOST'),
+        'PORT': os.environ.get('PORT'),
     }
 }
 

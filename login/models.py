@@ -35,7 +35,7 @@ class Player(AbstractBaseUser):
     email = models.EmailField(null=True, max_length=255, unique=True)
     first_name = models.CharField(null=True, max_length=30)
     last_name = models.CharField(null=True, max_length=30)
-    avatar_url = models.URLField(default=settings.DEFAULT_PROFILE_IMAGE)
+    avatar_url = models.URLField(null=True)
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='ON')
     two_FA = models.BooleanField(default=False)
     created_at = models.DateTimeField(null=True , auto_now_add=True)

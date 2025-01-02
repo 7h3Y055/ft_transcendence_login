@@ -8,8 +8,4 @@ urlpatterns = [
     path('logout/', views.logout),
     path('whoami/', views.whoami),
     path('delete/user/', views.delete_user),
-    path('avatar/upload/', views.avatar_upload),
-    
-    
-    path('', views.test),
 ]

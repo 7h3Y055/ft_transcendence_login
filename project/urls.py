@@ -17,6 +17,5 @@ Including another URLconf
 from django.urls import path, include
 
 urlpatterns = [
-    # path('o/', include('oauth2_provider.urls'), name='oauth2_provider'),
     path('account/', include('login.urls')),
 ]
