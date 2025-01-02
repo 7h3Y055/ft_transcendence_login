@@ -1,0 +1,19 @@
+TODO:
+
+
+add CSRF token to google API
+
+
+
+ROUTES:
+
+    /account/
+        /login/google/
+        /login/google/callback/
+        /login/42/
+        /login/42/callback/
+        /logout/
+        /whoami/
+        /delete/
+        /avatar/upload/
+        

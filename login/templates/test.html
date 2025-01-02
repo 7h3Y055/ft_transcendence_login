@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .user-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 350px;
+        }
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .user-info {
+            list-style-type: none;
+            padding: 0;
+        }
+        .user-info li {
+            margin-bottom: 10px;
+        }
+        .user-info strong {
+            display: inline-block;
+            width: 100px;
+            color: #666;
+        }
+        .avatar-form {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .avatar-form input[type="file"] {
+            margin-bottom: 10px;
+        }
+        .avatar-form input[type="submit"] {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .login-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 5px;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .google {
+            background-color: #4285F4;
+        }
+        .intra {
+            background-color: #00BABC;
+        }
+    </style>
+</head>
+<body>
+    {% if user.is_authenticated %}
+    <div class="user-card">
+        <img src="{{ user.avatar_url }}" alt="User Avatar" class="user-avatar">
+        <h1>{{ user.username }}</h1>
+        <ul class="user-info">
+            <li><strong>ID:</strong> {{ user.id }}</li>
+            <li><strong>Username:</strong> {{ user.username }}</li>
+            <li><strong>Email:</strong> {{ user.email }}</li>
+            <li><strong>First Name:</strong> {{ user.first_name }}</li>
+            <li><strong>Last Name:</strong> {{ user.last_name }}</li>
+            <li><strong>Status:</strong> {{ user.status }}</li>
+            <li><strong>2FA:</strong> {{ user.two_FA }}</li>
+            <li><strong>Created At:</strong> {{ user.created_at }}</li>
+        </ul>
+        <form class="avatar-form" action="http://localhost:8000/account/avatar/upload/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="avatar" accept="image/*" required>
+            <input type="submit" value="Update Avatar">
+        </form>
+        <center>
+            <a class="login-button" href="http://localhost:8000/account/logout/">Logout</a>
+        </center>
+    </div>
+    {% else %}
+    <div class="user-card">
+        <h1>Not Authenticated</h1>
+        <p>Please log in to view your information and update your avatar.</p>
+        <a href="http://localhost:8000/account/login/google/" class="login-button google">Login with Google</a>
+        <a href="http://localhost:8000/account/login/42/" class="login-button intra">Login with 42</a>
+    </div>
+    {% endif %}
+</body>
+</html>
