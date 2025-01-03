@@ -1,7 +1,5 @@
 from django.shortcuts import redirect
-# from django.conf import settings
-import secrets, os
-
+import secrets, os, logging
 
 def google_login(req):
     state = secrets.token_urlsafe(16)
@@ -12,8 +10,9 @@ def google_login(req):
     url += "&scope=email profile"
     url += f"&state={state}"
     response = redirect(url)
-    response.set_cookie('state', state, httponly=True, secure=True)
-    response.set_cookie('oauth2_provider', 'google', httponly=True, secure=True)
+    response.set_cookie('state', state, httponly=True, path='/account') # add secure=True 
+    response.set_cookie('oauth2_provider', 'google') # add secure=True 
+    logging.info('New request to create new user using google OAuth2 provider')
     return response
 
 def login_42(req):
@@ -24,6 +23,7 @@ def login_42(req):
     url += "&response_type=code"
     url += f"&state={state}"
     response = redirect(url)
-    response.set_cookie('state', state, httponly=True, secure=True)
-    response.set_cookie('oauth2_provider', '42', httponly=True, secure=True)
+    response.set_cookie('state', state, httponly=True, path='/account') # add secure=True 
+    response.set_cookie('oauth2_provider', '42') # add secure=True 
+    logging.info('New request to create new user using 42 OAuth2 provider')
     return response

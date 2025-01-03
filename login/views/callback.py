@@ -1,10 +1,9 @@
 from django.http import JsonResponse, HttpResponse
-# from django.conf import settings
-import requests
 from ..models import Player
 from django.contrib.auth import login
 from .serializers import UserSerializer
-import os
+import requests, os, logging
+
 
 
 def get_oauth2_urls(provider):
@@ -47,18 +46,22 @@ def create_user(user_info, provider):
 
 def callback(req):
     if req.COOKIES.get('state') != req.GET.get('state'):
+        logging.error('Invalid state')
         return JsonResponse({'error': 'Invalid state'}, status=400)
     
     code = req.GET.get('code')
     if not code:
+        logging.error('No code provided')
         return JsonResponse({'error': 'No code provided'}, status=400)
     
     try:
         oauth2_urls = get_oauth2_urls(req.COOKIES.get('oauth2_provider'))
     except ValueError as e:
+        logging.error(str(e))
         return JsonResponse({'error': str(e)}, status=400)
     
     if req.GET.get('error'):
+        logging.error(f"Error: {req.GET.get('error')}, Description: {req.GET.get('error_description')}")
         return JsonResponse({'error': req.GET.get('error'), 'error_description': req.GET.get('error_description')}, status=500)
 
     body = {
@@ -72,12 +75,16 @@ def callback(req):
     response = requests.post(url=oauth2_urls['token_url'], data=body)
 
     if response.status_code != 200:
+        logging.error(f"Failed to obtain token: {response.json().get('error')}, Description: {response.json().get('error_description')}")
         return JsonResponse({'error': response.json().get('error'), 'error_description': response.json().get('error_description')}, status=response.status_code)
     
     access_token = response.json().get('access_token')
-    
+    if not access_token:
+        logging.error('No access token provided')
+        return JsonResponse({'error': 'No access token provided'}, status=400)
     response = requests.get(url=oauth2_urls['userinfo_url'], headers={'Authorization': f'Bearer {access_token}'})
     if response.status_code != 200:
+        logging.error('Failed to obtain user info')
         return JsonResponse({'error': 'Failed to obtain user info'}, status=response.status_code)
     
     user_info = response.json()
@@ -85,9 +92,11 @@ def callback(req):
     try:
         user = Player.objects.get(email=user_info['email'])
     except Player.DoesNotExist:
+        logging.info(f'creating new User {user_info["email"]} does not exist')
         user = create_user(user_info, req.COOKIES.get('oauth2_provider'))
     
     login(req, user)
+    logging.info(f'login in User {user_info["email"]} exists')
     res = JsonResponse(UserSerializer(user).data, status=201)
     res.delete_cookie('state')
     return res

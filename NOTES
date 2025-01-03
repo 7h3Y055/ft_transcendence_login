@@ -1,41 +1,19 @@
 TODO:
 
-    add logging
 
 
 WhatINeedToKnow:
 
-    response.raise_for_status()
-
-    httponly=True, secure=True
-
-    LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'handlers': {
-            'file': {
-                'level': 'DEBUG',
-                'class': 'logging.FileHandler',
-                'filename': BASE_DIR / 'pong.log',
-            },
-        },
-        'root': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-        },
-    }
 
 
 
 ROUTES:
 
-    /account/
-        /login/google/
-        /login/google/callback/
-        /login/42/
-        /login/42/callback/
-        /logout/
-        /whoami/
-        /delete/
-        /avatar/upload/
+    
+/account/login/42/
+/account/login/google/
+/account/login/callback/
+/account/logout/
+/account/whoami/
+/account/delete/user/
         

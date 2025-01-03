@@ -41,11 +41,18 @@ OAUTH2_PROVIDER = {
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s (%(asctime)s): %(funcName)s | %(message)s',
+        },
+    },
     'handlers': {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': BASE_DIR / 'pong.log',
+            # 'filename': os.environ.get('LOG_FILE'),
+            'formatter': 'verbose',
         },
     },
     'root': {
@@ -53,6 +60,7 @@ LOGGING = {
         'level': 'DEBUG',
     },
 }
+
 
 
 
