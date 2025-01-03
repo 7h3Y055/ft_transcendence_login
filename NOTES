@@ -1,7 +1,29 @@
 TODO:
 
-add logging
-fix login
+    add logging
+
+
+WhatINeedToKnow:
+
+    response.raise_for_status()
+
+    httponly=True, secure=True
+
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'file': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': BASE_DIR / 'pong.log',
+            },
+        },
+        'root': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
+    }
 
 
 

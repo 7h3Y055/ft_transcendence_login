@@ -6,20 +6,21 @@ from django.contrib.auth import login
 from .serializers import UserSerializer
 import os
 
+
 def get_oauth2_urls(provider):
     if provider == '42':
         return {
             'token_url': 'https://api.intra.42.fr/oauth/token',
             'userinfo_url': 'https://api.intra.42.fr/v2/me',
             'client_id': os.environ.get('SOCIAL_AUTH_42_OAUTH2_KEY'),
-            'client_secret': os.environ.get('SOCIAL_AUTH_42_OAUTH2_KEY')
+            'client_secret': os.environ.get('SOCIAL_AUTH_42_OAUTH2_SECRET'),
         }
     elif provider == 'google':
         return {
             'token_url': 'https://oauth2.googleapis.com/token',
             'userinfo_url': 'https://www.googleapis.com/oauth2/v1/userinfo',
             'client_id': os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY'),
-            'client_secret': os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+            'client_secret': os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
         }
     else:
         raise ValueError('Invalid OAuth2 provider')
@@ -43,8 +44,8 @@ def create_user(user_info, provider):
         )
     return user
 
+
 def callback(req):
-    # return JsonResponse({'error': 'Invalid state'}, status=400)
     if req.COOKIES.get('state') != req.GET.get('state'):
         return JsonResponse({'error': 'Invalid state'}, status=400)
     
@@ -67,12 +68,14 @@ def callback(req):
         'code': code,
         "redirect_uri": str(os.environ.get('DOMAIN')) + '/account/login/callback/',
     }
+
     response = requests.post(url=oauth2_urls['token_url'], data=body)
 
     if response.status_code != 200:
         return JsonResponse({'error': response.json().get('error'), 'error_description': response.json().get('error_description')}, status=response.status_code)
     
     access_token = response.json().get('access_token')
+    
     response = requests.get(url=oauth2_urls['userinfo_url'], headers={'Authorization': f'Bearer {access_token}'})
     if response.status_code != 200:
         return JsonResponse({'error': 'Failed to obtain user info'}, status=response.status_code)

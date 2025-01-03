@@ -18,7 +18,6 @@ def google_login(req):
 
 def login_42(req):
     state = secrets.token_urlsafe(16)
-    print(os.environ['SOCIAL_AUTH_42_OAUTH2_KEY'])
     url = "https://api.intra.42.fr/oauth/authorize"
     url += f"?client_id={ os.environ.get('SOCIAL_AUTH_42_OAUTH2_KEY')}"
     url += f"&redirect_uri={os.environ.get('DOMAIN')}/account/login/callback/"
